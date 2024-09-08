@@ -1,10 +1,13 @@
 name: Build and Release Plugin
 
-# 触发条件：在主分支推送代码，或创建新的 tag 时触发构建
+# 添加 workflow_dispatch 以便手动触发
 on:
   push:
     branches:
       - main
+    tags:
+      - 'v*.*.*'  # 当推送符合 semver 格式的 tag（如 v1.0.0）时触发
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   build:
@@ -20,7 +23,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'adopt' # 可以是 'zulu', 'adopt' 等不同的 JVM 发行商
+        distribution: 'temurin'
         cache: gradle
 
     # 构建项目
@@ -50,6 +53,6 @@ jobs:
     - name: Upload to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
-        files: build/libs/*.jar  # 根据实际路径调整
+        files: build/libs/*.jar
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的 token，用于发布到 releases
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
