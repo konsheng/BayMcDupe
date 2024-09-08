@@ -2,9 +2,9 @@ name: Build and Release Plugin
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:  # 允许手动触发
+    tags:
+      - 'v*.*'
+  workflow_dispatch:
 
 jobs:
   build:
