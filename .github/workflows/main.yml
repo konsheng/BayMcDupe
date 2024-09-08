@@ -1,0 +1,55 @@
+name: Build and Release Plugin
+
+# 触发条件：在主分支推送代码，或创建新的 tag 时触发构建
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 检出代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 设置 JDK 17 环境
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt' # 可以是 'zulu', 'adopt' 等不同的 JVM 发行商
+        cache: gradle
+
+    # 构建项目
+    - name: Build with Gradle
+      run: ./gradlew clean build
+
+    # 如果你使用了 Gradle Shadow 插件构建 JAR
+    - name: Build Plugin with ShadowJar
+      run: ./gradlew shadowJar
+
+    # 将构建的插件保存为构建产物
+    - name: Archive Plugin Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: plugin
+        path: build/libs/*.jar  # 根据实际输出路径调整
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    # 检出代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 发布到 GitHub Releases
+    - name: Upload to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/libs/*.jar  # 根据实际路径调整
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的 token，用于发布到 releases
