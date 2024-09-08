@@ -24,13 +24,13 @@ public class BayMcDupe extends JavaPlugin {
     @Override
     public void onEnable() {
         try (BukkitAudiences ignored = BukkitAudiences.create(this)) {
-            getLogger().info("BayMcDupe 已启用");
+            getLogger().info("BayMcDupe 插件已启用");
         }
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("BayMcDupe 已禁用");
+        getLogger().info("BayMcDupe 插件已禁用");
     }
 
     @Override
