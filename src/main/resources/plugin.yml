@@ -1,0 +1,10 @@
+name: BayMcDupe
+version: '1.0-SNAPSHOT'
+main: org.Konsheng.BayMcDupe
+api-version: '1.21'
+authors: [ Konsheng ]
+commands:
+  dupe:
+    description: 复制手持物品
+    usage: /dupe <数量>
+    permission: baymc.dupe
